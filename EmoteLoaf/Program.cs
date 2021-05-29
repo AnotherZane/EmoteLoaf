@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MimeGuesser;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -28,7 +29,7 @@ namespace EmoteLoaf
                     .ConfigureLogging(x =>
                     {
                         var logger = new LoggerConfiguration()
-                            .MinimumLevel.Debug()
+                            .MinimumLevel.Information()
                             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                             .WriteTo.Console(
                                 outputTemplate:
@@ -44,18 +45,25 @@ namespace EmoteLoaf
                         x.Services.Remove(x.Services.First(x => x.ServiceType == typeof(ILogger<>)));
                         x.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
                     })
-                    .ConfigureHostConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
+                    .ConfigureHostConfiguration(x =>
+                    {
+                        x.AddCommandLine(args);
+                        x.AddJsonFile(ConfigPath);
+                    })
                     .ConfigureServices((context, services) =>
                     {
                         services.AddInteractivity();
                         services.AddSingleton<Random>();
                         services.AddSingleton<HttpClient>();
+                        
+                        // Adapted from https://github.com/mjolka/filetypes
+                        services.AddSingleton<FileTypeGuesser>();
                     })
                     .ConfigureDiscordBot<EmoteLoafBot>((context, bot) =>
                     {
                         bot.Token = context.Configuration["discord:token"];
                         // no implicit conversion cause they're considered longs
-                        bot.OwnerIds = new[] {new Snowflake(406533583587770369), new Snowflake(608143610415939638)};
+                        bot.OwnerIds = new[] {new Snowflake(608143610415939638), new Snowflake(406533583587770369)};
                         bot.Prefixes = new[] {"el/", "em/", "ed/"};
                         bot.Intents = GatewayIntents.All;
                     })

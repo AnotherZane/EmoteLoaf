@@ -14,7 +14,6 @@ namespace EmoteLoaf.Commands.Modules
 {
     [Name("Information")]
     [Description("General bot information")]
-    [RequireBotChannelPermissions(Permission.SendMessages | Permission.EmbedLinks)]
     public class InformationModule : DiscordModuleBase
     {
         
