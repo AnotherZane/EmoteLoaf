@@ -23,7 +23,7 @@ namespace EmoteLoaf.Commands.Modules
         [Cooldown(1, 3, CooldownMeasure.Seconds, CooldownBucketType.Channel)]
         public async Task GetPingAsync()
         {
-            var latency = DateTimeOffset.UtcNow - Context.Message.CreatedAt;
+            var latency = DateTimeOffset.UtcNow - Context.Message.CreatedAt();
 
             var sw = Stopwatch.StartNew();
             var message = await Response("🏓 Ping?");
@@ -41,7 +41,7 @@ namespace EmoteLoaf.Commands.Modules
         [Description("Get my invite link")]
         [Cooldown(1, 2, CooldownMeasure.Seconds, CooldownBucketType.Channel)]
         public DiscordCommandResult GetInvite()
-            => Response(new LocalEmbedBuilder()
+            => Response(new LocalEmbed()
                 .WithDefaultColor()
                 .WithAuthor(Context.Bot.CurrentUser)
                 .WithDescription(
@@ -68,7 +68,7 @@ namespace EmoteLoaf.Commands.Modules
             using var process = Process.GetCurrentProcess();
             var uptime = (DateTime.Now - process.StartTime).Humanize();
 
-            return Response(new LocalEmbedBuilder()
+            return Response(new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle(Context.Bot.CurrentUser.Name)
                 .WithThumbnailUrl(Context.Bot.CurrentUser.GetAvatarUrl())

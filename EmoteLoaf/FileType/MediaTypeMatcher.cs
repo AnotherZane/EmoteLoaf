@@ -1,4 +1,4 @@
-﻿namespace MimeGuesser
+﻿namespace EmoteLoaf.FileType
 {
     using System;
     using System.IO;

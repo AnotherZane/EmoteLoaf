@@ -1,4 +1,4 @@
-﻿namespace MimeGuesser
+﻿namespace EmoteLoaf.FileType
 {
     using System.Collections.Generic;
     using System.IO;
@@ -7,7 +7,7 @@
     public class FileTypeGuesser
     {
         private readonly IList<FileType> _knownFileTypes;
-
+        
         public FileTypeGuesser()
         {
             _knownFileTypes = new List<FileType>
@@ -21,7 +21,9 @@
                 new FileType("Graphics Interchange Format 89a", "gif", "image/gif",
                     new ExactFileTypeMatcher(new byte[] {0x47, 0x49, 0x46, 0x38, 0x39, 0x61})),
                 new FileType("WebP", ".webp", "image/webp",
-                    new FuzzyFileTypeMatcher(new byte?[] {0x52, 0x49, 0x46, 0x46, null, null, null, null, 0x57, 0x45, 0x42, 0x50}))
+                    new FuzzyFileTypeMatcher(new byte?[] {0x52, 0x49, 0x46, 0x46, null, null, null, null, 0x57, 0x45, 0x42, 0x50})),
+                new FileType("ZIP", "zip", "application/zip",
+                    new ExactFileTypeMatcher(new byte[] {0x50, 0x4B, 0x03, 0x04}))
             };
         }
 
@@ -30,22 +32,22 @@
             _knownFileTypes = knownFileTypes;
         }
         
-        public FileType GuessMimeType(Stream fileContent)
+        public FileType GuessFileType(Stream fileContent)
         {
-            return GuessMimeTypes(fileContent).FirstOrDefault() ?? FileType.Unknown;
+            return GuessFileTypes(fileContent).FirstOrDefault() ?? FileType.Unknown;
         }
 
-        public IEnumerable<FileType> GuessMimeTypes(Stream stream)
+        public IEnumerable<FileType> GuessFileTypes(Stream stream)
         {
             return _knownFileTypes.Where(fileType => fileType.Matches(stream));
         }
         
-        public FileType GuessMimeType(byte[] fileContent)
+        public FileType GuessFileType(byte[] fileContent)
         {
-            return GuessMimeTypes(fileContent).FirstOrDefault() ?? FileType.Unknown;
+            return GuessFileTypes(fileContent).FirstOrDefault() ?? FileType.Unknown;
         }
 
-        public IEnumerable<FileType> GuessMimeTypes(byte[] stream)
+        public IEnumerable<FileType> GuessFileTypes(byte[] stream)
         {
             return _knownFileTypes.Where(fileType => fileType.Matches(stream));
         }

@@ -1,34 +1,34 @@
-﻿namespace MimeGuesser
+﻿namespace EmoteLoaf.FileType
 {
     using System.IO;
 
     public class FileType
     {
-        private readonly FileTypeMatcher _fileTypeMatcher;
+        private readonly FileTypeMatcher _FileTypeMatcher;
 
         public string Name { get; }
         public string Extension { get; }
         
-        public string Mime { get; }
+        public string MediaType { get; }
 
         public static FileType Unknown => new FileType("unknown", string.Empty, "unknown", null);
 
-        public FileType(string name, string extension, string mime, FileTypeMatcher matcher)
+        public FileType(string name, string extension, string mediaType, FileTypeMatcher matcher)
         {
             Name = name;
             Extension = extension;
-            Mime = mime;
-            _fileTypeMatcher = matcher;
+            MediaType = mediaType;
+            _FileTypeMatcher = matcher;
         }
 
         public bool Matches(Stream stream)
         {
-            return _fileTypeMatcher == null || _fileTypeMatcher.Matches(stream);
+            return _FileTypeMatcher == null || _FileTypeMatcher.Matches(stream);
         }
         
         public bool Matches(byte[] stream)
         {
-            return _fileTypeMatcher == null || _fileTypeMatcher.Matches(stream);
+            return _FileTypeMatcher == null || _FileTypeMatcher.Matches(stream);
         }
     }
 }
